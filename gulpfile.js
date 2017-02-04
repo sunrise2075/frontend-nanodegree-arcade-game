@@ -18,7 +18,7 @@ gulp.task('scripts',function(){
 	gulp.src('js/app.js')
 		.pipe(gulpPlumber()) 
 		.pipe(uglify())
-		//.pipe(rename('app.min.js'))
+		.pipe(rename('app.min.js'))
 		.pipe(gulp.dest('js/'))
 		.pipe(connect.reload());
 });

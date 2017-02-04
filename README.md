@@ -9,5 +9,7 @@ For detailed instructions on how to get started, check out this [guide](https://
 
 1. Install development dependencies using npm tool in cmd terminal
 ```
-npm install --save-dev gulp gulp-uglify jshint gulp-jshint gulp-rename gulp-plumber gulp-connect jshint-stylish gulp-csslint
+npm install --save-dev gulp gulp-uglify jshint gulp-jshint gulp-rename 
+
+npm install --save-dev gulp-plumber gulp-connect jshint-stylish gulp-csslint
 ```
