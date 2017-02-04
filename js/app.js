@@ -26,18 +26,43 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function(name){
     this.name = name;
+    this.x = 0;
+    this.y = 0;
+    this.image = 'images/char-boy.png';
 }
 
 Player.prototype.update = function(){
-    console.log(this.name + 'is being updated...');
+    this.render();
 };
 
 Player.prototype.render = function(){
-    console.log(this.name + 'is being rendered...');
+    console.log(this.name + ' is being rendered...');
+    ctx.drawImage(Resources.get(this.image), this.x, this.y);
 };
 
-Player.prototype.handleInput = function(){
-    console.log(this.name + 'is handling input...');
+Player.prototype.handleInput = function(action){
+    if(!action)  return;
+    console.log(this.name + ' is handling input...'+ action);
+    switch (action) {
+        case 'left':
+            this.x--;
+            this.update();
+            break;
+        case 'up':
+            this.y--;
+            this.update();
+            break;
+        case 'right':
+            this.x++ ;
+            this.update();
+            break;
+        case 'down':
+            this.y++ ;
+            this.update();
+            break;
+        default:
+            break;
+    }
 };
 
 // Now instantiate your objects.
@@ -59,6 +84,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
