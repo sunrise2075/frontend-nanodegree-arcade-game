@@ -2,6 +2,21 @@
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    this.x = 0;
+    var trackNo = Math.floor(Math.random() * 3) + 1 ;
+    switch (trackNo){
+        case 1:
+            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the first stone track
+            break;
+        case 2:
+            this.y = 1/3 * STONE_BLOCK_HEIGHT + 1/2*STONE_BLOCK_HEIGHT;  //the second stone track
+            break;
+        case 3:
+            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the third stone track
+            break;
+        default:
+            throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
+    }
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -14,6 +29,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + 20 * dt;
     this.render();
 };
 
@@ -85,12 +101,15 @@ Player.prototype.handleInput = function(action){
 // Place the player object in a variable called player
 var STONE_BLOCK_WIDTH = 101;
 var STONE_BLOCK_HEIGHT = 171;
+
 var allEnemies = [];
-var enemy = new Enemy();
-allEnemies.push(enemy);
+
+for(var i=0; i < 3; i++){
+    var enemy = new Enemy();
+    allEnemies.push(enemy);
+}
 
 var player = new Player('sunrise2075');
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
