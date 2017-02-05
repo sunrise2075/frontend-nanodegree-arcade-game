@@ -1,4 +1,4 @@
-//
+//util constants
 var STONE_BLOCK_WIDTH = 101;
 var STONE_BLOCK_HEIGHT = 171;
 
@@ -8,16 +8,16 @@ var Enemy = function() {
     // we've provided one for you to get started
     this.x = 0;
     // select a stone track line
-    var trackNo = Math.floor(Math.random() * 3) + 1 ;
-    switch (trackNo){
+    var trackNo = Math.floor(Math.random() * 3) + 1;
+    switch (trackNo) {
         case 1:
-            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the topmost stone track line
+            this.y = 1 / 3 * STONE_BLOCK_HEIGHT; //the topmost stone track line
             break;
         case 2:
-            this.y = 1/3 * STONE_BLOCK_HEIGHT + 1/2*STONE_BLOCK_HEIGHT;  //the second stone track line
+            this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 1 / 2 * STONE_BLOCK_HEIGHT; //the second stone track line
             break;
         case 3:
-            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the down-most stone track line
+            this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 2 / 2 * STONE_BLOCK_HEIGHT; // the down-most stone track line
             break;
         default:
             throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
@@ -49,7 +49,7 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(name){
+var Player = function(name) {
     //you can set a name to the player
     this.name = name;
     //used as the default icon of player
@@ -62,21 +62,23 @@ var Player = function(name){
     // Cartesian coordinate system which takes left down corner as its origin
     this.gridX = 0;
     this.gridY = 0;
-}
+};
 
-Player.prototype.update = function(){
+Player.prototype.update = function() {
     this.render();
 };
 
-Player.prototype.render = function(){
+Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.image), this.x, this.y);
 };
 
-Player.prototype.handleInput = function(action){
-    if(!action)  return;
+Player.prototype.handleInput = function(action) {
+    if (!action) {
+        return;
+    }
     switch (action) {
         case 'left':
-            if(this.gridX > 0){
+            if (this.gridX > 0) {
                 //keep the player from the leftmost boundary
                 this.x = this.x - STONE_BLOCK_WIDTH;
                 this.gridX--;
@@ -84,25 +86,25 @@ Player.prototype.handleInput = function(action){
             }
             break;
         case 'up':
-            if(this.gridY < 4){
+            if (this.gridY < 4) {
                 //keep the player from the water block boundary
-                this.y = this.y - STONE_BLOCK_HEIGHT/2;
+                this.y = this.y - STONE_BLOCK_HEIGHT / 2;
                 this.gridY++;
                 this.update();
             }
             break;
         case 'right':
             //keep the player from the rightmost boundary
-            if(this.gridX < 4){
-                this.x = this.x + STONE_BLOCK_WIDTH ;
+            if (this.gridX < 4) {
+                this.x = this.x + STONE_BLOCK_WIDTH;
                 this.gridX++;
                 this.update();
             }
             break;
         case 'down':
             //keep the player from the bottom boundary
-            if(this.gridY> 0){
-                this.y = this.y + STONE_BLOCK_HEIGHT/2 ;
+            if (this.gridY > 0) {
+                this.y = this.y + STONE_BLOCK_HEIGHT / 2;
                 this.gridY--;
                 this.update();
             }
@@ -117,7 +119,7 @@ Player.prototype.handleInput = function(action){
 // Place the player object in a variable called player
 var allEnemies = [];
 
-for(var i=0; i < 3; i++){
+for (var i = 0; i < 3; i++) {
     var enemy = new Enemy();
     allEnemies.push(enemy);
 }
