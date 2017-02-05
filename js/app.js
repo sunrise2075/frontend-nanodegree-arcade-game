@@ -34,7 +34,10 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    //how to use the parameter of dt?
     this.x = this.x + 20 * dt;
+    //I need some logic to
+    //control the time delay before drawing this enemy bug onto the stone track line
     this.render();
 };
 
