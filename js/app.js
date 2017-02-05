@@ -1,18 +1,23 @@
+//
+var STONE_BLOCK_WIDTH = 101;
+var STONE_BLOCK_HEIGHT = 171;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = 0;
+    // select a stone track
     var trackNo = Math.floor(Math.random() * 3) + 1 ;
     switch (trackNo){
         case 1:
-            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the first stone track
+            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the topmost stone track
             break;
         case 2:
             this.y = 1/3 * STONE_BLOCK_HEIGHT + 1/2*STONE_BLOCK_HEIGHT;  //the second stone track
             break;
         case 3:
-            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the third stone track
+            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the downmost stone track
             break;
         default:
             throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
@@ -43,11 +48,14 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function(name){
     this.name = name;
+    this.image = 'images/char-boy.png';
+    //control the absolute position
     this.x = 0;
     this.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
+    //control the relative position with reference of an
+    // Cartesian coordinate system which takes left down corner as origin
     this.gridX = 0;
     this.gridY = 0;
-    this.image = 'images/char-boy.png';
 }
 
 Player.prototype.update = function(){
@@ -63,6 +71,7 @@ Player.prototype.handleInput = function(action){
     switch (action) {
         case 'left':
             if(this.gridX > 0){
+                //keep the player from the leftmost boundary
                 this.x = this.x - STONE_BLOCK_WIDTH;
                 this.gridX--;
                 this.update();
@@ -70,13 +79,14 @@ Player.prototype.handleInput = function(action){
             break;
         case 'up':
             if(this.gridY < 4){
-                //keep the player from the water block
+                //keep the player from the water block boundary
                 this.y = this.y - STONE_BLOCK_HEIGHT/2;
                 this.gridY++;
                 this.update();
             }
             break;
         case 'right':
+            //keep the player from the rightmost boundary
             if(this.gridX < 4){
                 this.x = this.x + STONE_BLOCK_WIDTH ;
                 this.gridX++;
@@ -84,7 +94,7 @@ Player.prototype.handleInput = function(action){
             }
             break;
         case 'down':
-            //keep the player from the bottom line
+            //keep the player from the bottom boundary
             if(this.gridY> 0){
                 this.y = this.y + STONE_BLOCK_HEIGHT/2 ;
                 this.gridY--;
@@ -99,9 +109,6 @@ Player.prototype.handleInput = function(action){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var STONE_BLOCK_WIDTH = 101;
-var STONE_BLOCK_HEIGHT = 171;
-
 var allEnemies = [];
 
 for(var i=0; i < 3; i++){
