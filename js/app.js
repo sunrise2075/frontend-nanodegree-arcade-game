@@ -41,6 +41,7 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + this.speed * dt;
     //Question 3: I need some logic to
     //control the time delay before drawing this enemy bug onto the stone track line
+    //so that current bug cannot collide with and keep a proper distance from any other bug
     this.render();
 };
 
