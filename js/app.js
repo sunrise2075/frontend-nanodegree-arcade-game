@@ -59,7 +59,7 @@ var Player = function(name){
     //default position, the left-down corner of grass block
     this.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
     //control the relative position with reference of an
-    // Cartesian coordinate system which takes left down corner as origin
+    // Cartesian coordinate system which takes left down corner as its origin
     this.gridX = 0;
     this.gridY = 0;
 }
