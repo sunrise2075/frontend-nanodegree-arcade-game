@@ -7,17 +7,17 @@ var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = 0;
-    // select a stone track
+    // select a stone track line
     var trackNo = Math.floor(Math.random() * 3) + 1 ;
     switch (trackNo){
         case 1:
-            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the topmost stone track
+            this.y =1/3 * STONE_BLOCK_HEIGHT;  //the topmost stone track line
             break;
         case 2:
-            this.y = 1/3 * STONE_BLOCK_HEIGHT + 1/2*STONE_BLOCK_HEIGHT;  //the second stone track
+            this.y = 1/3 * STONE_BLOCK_HEIGHT + 1/2*STONE_BLOCK_HEIGHT;  //the second stone track line
             break;
         case 3:
-            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the downmost stone track
+            this.y = 1/3 * STONE_BLOCK_HEIGHT + 2/2*STONE_BLOCK_HEIGHT;  // the down-most stone track line
             break;
         default:
             throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
@@ -47,10 +47,13 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(name){
+    //you can set a name to the player
     this.name = name;
+    //used as the default icon of player
     this.image = 'images/char-boy.png';
     //control the absolute position
     this.x = 0;
+    //default position, the left-down corner of grass block
     this.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
     //control the relative position with reference of an
     // Cartesian coordinate system which takes left down corner as origin
