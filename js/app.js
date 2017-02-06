@@ -2,30 +2,54 @@
 var STONE_BLOCK_WIDTH = 101;
 var STONE_BLOCK_HEIGHT = 171;
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function( initlaneNo ) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x = 0;
+    this.calculateX();
+    this.calculateY(initlaneNo);
+    this.speed = 30;
+
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    this.sprite = 'images/enemy-bug.png';
+};
+
+Enemy.prototype.isOnCanvas = function(){
+   if(this.x < 550){
+       return true;
+   }
+    return false;
+}
+
+Enemy.prototype.calculateX = function(){
+        this.x =  - getRandomInt(1,5) * STONE_BLOCK_WIDTH  ;
+};
+
+Enemy.prototype.calculateY = function(laneNo){
     // select a stone track line
-    var trackNo = Math.floor(Math.random() * 3) + 1;
-    switch (trackNo) {
-        case 1:
+    if(!laneNo){
+        laneNo = Math.floor(Math.random() * 3) + 1;
+    }
+    switch (laneNo) {
+        case 0:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT; //the topmost stone track line
             break;
-        case 2:
+        case 1:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 1 / 2 * STONE_BLOCK_HEIGHT; //the second stone track line
             break;
-        case 3:
+        case 2:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 2 / 2 * STONE_BLOCK_HEIGHT; // the down-most stone track line
             break;
         default:
             throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
     }
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
@@ -36,9 +60,14 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     //there should be a default speed
     //Question 1: how to change the speed during the game ?
-    this.speed = 20;
     //Question 2: is this the right way to use the parameter dt?
-    this.x = this.x + this.speed * dt;
+    if(this.isOnCanvas()){
+        this.x = this.x + this.speed * dt;
+    }else{
+        this.calculateX();
+        this.calculateY();
+    }
+
     //Question 3: I need some logic to
     //control the time delay before drawing this enemy bug onto the stone track line
     //so that current bug cannot collide with and keep a proper distance from any other bug
@@ -124,7 +153,8 @@ Player.prototype.handleInput = function(action) {
 var allEnemies = [];
 
 for (var i = 0; i < 3; i++) {
-    var enemy = new Enemy();
+    var laneNo = i%3;
+    var enemy = new Enemy(laneNo);
     allEnemies.push(enemy);
 }
 
