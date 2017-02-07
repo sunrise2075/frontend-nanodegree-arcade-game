@@ -8,14 +8,41 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function check( enemy) {
+    var laneNo = enemy.laneNo;
+    if((laneNo === 1) &&( player.gridY === 4)){
+        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    if((laneNo ===2) && (player.gridY === 3)){
+        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    if((laneNo ===3) && (player.gridY === 2)){
+        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    return false;
+}
+
 // Enemies our player must avoid
-var Enemy = function( initlaneNo ) {
+var Enemy = function(serialNo) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    this.serialNo = serialNo;
+    this.laneNo = this.serialNo % 3 + 1;
+    this.speed = getRandomInt(10, 20)* 10 ;
     this.calculateX();
-    this.calculateY(initlaneNo);
-    this.speed = 30;
-
+    this.calculateY();
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -24,27 +51,25 @@ var Enemy = function( initlaneNo ) {
 Enemy.prototype.isOnCanvas = function(){
    if(this.x < 550){
        return true;
+   }else{
+       return false;
    }
-    return false;
-}
-
-Enemy.prototype.calculateX = function(){
-        this.x =  - getRandomInt(1,5) * STONE_BLOCK_WIDTH  ;
 };
 
-Enemy.prototype.calculateY = function(laneNo){
-    // select a stone track line
-    if(!laneNo){
-        laneNo = Math.floor(Math.random() * 3) + 1;
-    }
-    switch (laneNo) {
-        case 0:
+Enemy.prototype.calculateX = function(){
+    this.x = -(this.serialNo + 1) * STONE_BLOCK_WIDTH;
+};
+
+Enemy.prototype.calculateY = function(){
+    // an easier way to select a stone lane by its serialNo
+    switch (this.laneNo) {
+        case 1:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT; //the topmost stone track line
             break;
-        case 1:
+        case 2:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 1 / 2 * STONE_BLOCK_HEIGHT; //the second stone track line
             break;
-        case 2:
+        case 3:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT + 2 / 2 * STONE_BLOCK_HEIGHT; // the down-most stone track line
             break;
         default:
@@ -58,14 +83,10 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    //there should be a default speed
-    //Question 1: how to change the speed during the game ?
-    //Question 2: is this the right way to use the parameter dt?
     if(this.isOnCanvas()){
         this.x = this.x + this.speed * dt;
     }else{
         this.calculateX();
-        this.calculateY();
     }
 
     //Question 3: I need some logic to
@@ -98,6 +119,20 @@ var Player = function(name) {
 };
 
 Player.prototype.update = function() {
+    //if the player is touched by the enemy
+    //recalculate a new starting position
+
+    // allEnemies.forEach(function(enemy){
+    //     var flag = check( enemy)
+    //     console.log("  check result  :" +  flag);
+    //     if(flag){
+    //         //control the absolute position
+    //         player.x = 0;
+    //         //default position, the left-down corner of grass block
+    //         player.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
+    //         return ;
+    //     }
+    // });
     this.render();
 };
 
@@ -152,9 +187,9 @@ Player.prototype.handleInput = function(action) {
 // Place the player object in a variable called player
 var allEnemies = [];
 
-for (var i = 0; i < 3; i++) {
-    var laneNo = i%3;
-    var enemy = new Enemy(laneNo);
+for (var i = 0; i < 5; i++) {
+    var serialNo = i+1;
+    var enemy = new Enemy(serialNo);
     allEnemies.push(enemy);
 }
 
