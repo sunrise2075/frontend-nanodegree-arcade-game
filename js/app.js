@@ -8,44 +8,22 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function check( enemy) {
-    var laneNo = enemy.laneNo;
-    if((laneNo === 1) &&( player.gridY === 4)){
-        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    if((laneNo ===2) && (player.gridY === 3)){
-        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    if((laneNo ===3) && (player.gridY === 2)){
-        if(enemy.x + STONE_BLOCK_WIDTH > player.x){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    return false;
-}
 
 // Enemies our player must avoid
 var Enemy = function(serialNo) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.serialNo = serialNo;
-    this.laneNo = this.serialNo % 3 + 1;
-    this.speed = getRandomInt(10, 20)* 10 ;
-    this.calculateX();
-    this.calculateY();
+    //take each block as an coordinate
+    this.speed = getRandomInt(100, 200)  +  200 ;
+    this.blockX = -( 2* serialNo + 1);
+    console.log();
+    this.blockY = getRandomInt(1,4);
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.calculateX();
+    this.calculateY();
+
 };
 
 Enemy.prototype.isOnCanvas = function(){
@@ -57,12 +35,12 @@ Enemy.prototype.isOnCanvas = function(){
 };
 
 Enemy.prototype.calculateX = function(){
-    this.x = -(this.serialNo + 1) * STONE_BLOCK_WIDTH;
+    this.x = this.blockX  * STONE_BLOCK_WIDTH;
 };
 
 Enemy.prototype.calculateY = function(){
     // an easier way to select a stone lane by its serialNo
-    switch (this.laneNo) {
+    switch (this.blockY) {
         case 1:
             this.y = 1 / 3 * STONE_BLOCK_HEIGHT; //the topmost stone track line
             break;
@@ -85,10 +63,7 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     if(this.isOnCanvas()){
         this.x = this.x + this.speed * dt;
-    }else{
-        this.calculateX();
     }
-
     //Question 3: I need some logic to
     //control the time delay before drawing this enemy bug onto the stone track line
     //so that current bug cannot collide with and keep a proper distance from any other bug
@@ -108,31 +83,22 @@ var Player = function(name) {
     this.name = name;
     //used as the default icon of player
     this.image = 'images/char-boy.png';
+    this.blockX = getRandomInt(0, 5);
+    this.blockY = getRandomInt(4, 6)
     //control the absolute position
-    this.x = 0;
+    this.x = this.blockX * STONE_BLOCK_WIDTH;
     //default position, the left-down corner of grass block
-    this.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
+    this.y = this.blockY * STONE_BLOCK_HEIGHT/2 - 20;
     //control the relative position with reference of an
     // Cartesian coordinate system which takes left down corner as its origin
-    this.gridX = 0;
-    this.gridY = 0;
 };
 
-Player.prototype.update = function() {
-    //if the player is touched by the enemy
-    //recalculate a new starting position
+Player.prototype.toPositionInBlock = function(){
+    console.log("blockX:["+ this.blockX +"], blockY:["+ this.blockY +"]");
+}
 
-    // allEnemies.forEach(function(enemy){
-    //     var flag = check( enemy)
-    //     console.log("  check result  :" +  flag);
-    //     if(flag){
-    //         //control the absolute position
-    //         player.x = 0;
-    //         //default position, the left-down corner of grass block
-    //         player.y = 2.5 * STONE_BLOCK_HEIGHT - 20;
-    //         return ;
-    //     }
-    // });
+Player.prototype.update = function() {
+    this.toPositionInBlock();
     this.render();
 };
 
@@ -146,34 +112,34 @@ Player.prototype.handleInput = function(action) {
     }
     switch (action) {
         case 'left':
-            if (this.gridX > 0) {
+            if (this.blockX > 0) {
                 //keep the player from the leftmost boundary
                 this.x = this.x - STONE_BLOCK_WIDTH;
-                this.gridX--;
+                this.blockX--;
                 this.update();
             }
             break;
         case 'up':
-            if (this.gridY < 4) {
+            if (this.blockY < 4) {
                 //keep the player from the water block boundary
                 this.y = this.y - STONE_BLOCK_HEIGHT / 2;
-                this.gridY++;
+                this.blockY--;
                 this.update();
             }
             break;
         case 'right':
             //keep the player from the rightmost boundary
-            if (this.gridX < 4) {
+            if (this.blockX < 4) {
                 this.x = this.x + STONE_BLOCK_WIDTH;
-                this.gridX++;
+                this.blockX++;
                 this.update();
             }
             break;
         case 'down':
             //keep the player from the bottom boundary
-            if (this.gridY > 0) {
+            if (this.blockY > 0) {
                 this.y = this.y + STONE_BLOCK_HEIGHT / 2;
-                this.gridY--;
+                this.blockY++;
                 this.update();
             }
             break;
@@ -187,9 +153,9 @@ Player.prototype.handleInput = function(action) {
 // Place the player object in a variable called player
 var allEnemies = [];
 
-for (var i = 0; i < 5; i++) {
-    var serialNo = i+1;
-    var enemy = new Enemy(serialNo);
+for (var i = 0; i < 50; i++) {
+    var serailNo = i+1;
+    var enemy = new Enemy(serailNo);
     allEnemies.push(enemy);
 }
 
