@@ -16,9 +16,6 @@ var Enemy = function(serialNo) {
     //take each block as an coordinate
     this.speed = getRandomInt(1, 200)  +  200 ;
     this.serialNo = serialNo;
-
-    console.log();
-
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -59,19 +56,6 @@ Enemy.prototype.calculateY = function(){
 
 };
 
-Enemy.prototype.bitePlayer =function(){
-    var success = false;
-    if(this.x < 0){
-        return success;
-    }
-
-    if(this.blockY === player.blockY){
-        var distance = player.x + 25 -this.x;
-        success = (distance>0)&&(distance<= STONE_BLOCK_WIDTH);
-    }
-    return success;
-}
-
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -104,25 +88,50 @@ var Player = function(name) {
     this.name = name;
     //used as the default icon of player
     this.image = 'images/char-boy.png';
-    this.reset();
+    this.initPos();
     //control the relative position with reference of an
     // Cartesian coordinate system which takes left down corner as its origin
 };
 
-Player.prototype.reset = function(){
-    this.blockX = getRandomInt(0, 5);
-    this.blockY = getRandomInt(4, 6)
+Player.prototype.initPos = function(){
+    this.blockX = 2;
+    this.blockY = 4;
     //control the absolute position
     this.x = this.blockX * STONE_BLOCK_WIDTH;
     //default position, the left-down corner of grass block
     this.y = this.blockY * STONE_BLOCK_HEIGHT/2 - 20;
 }
 
+Player.prototype.checkCollision = function(){
+    var result = false;
+    var dangerousEnemy = allEnemies.filter(function(enemy) {
+            var flag = false;
+            if(enemy.blockY === player.blockY){
+                var distance = player.x + 25 -enemy.x;
+                flag = (distance>0)&&(distance<= STONE_BLOCK_WIDTH);
+                if(flag){
+                    flag = true;
+                }
+            }
+            return flag;
+    });
+    result = (dangerousEnemy.length >0 )
+    return result;
+};
+
+Player.prototype.checkSuccess = function(){
+    return (this.blockY === 1);
+};
+
 Player.prototype.toPositionInBlock = function(){
     console.log("blockX:["+ this.blockX +"], blockY:["+ this.blockY +"]");
 };
 
 Player.prototype.update = function() {
+    var checkCollision = this.checkCollision();
+    if(checkCollision){
+        this.initPos();
+    }
     this.render();
 };
 
