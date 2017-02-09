@@ -147,11 +147,20 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        player.render();
+
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
-        player.render();
+        allEnemies.forEach(function(enemy) {
+            if(enemy.bitePlayer()){
+                alert("Game Over!");
+                global.location.reload();
+                // player.reset();
+            }
+        });
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -160,6 +169,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to

@@ -12,4 +12,8 @@ For detailed instructions on how to get started, check out this [guide](https://
 npm install --save-dev gulp gulp-uglify jshint gulp-jshint gulp-rename 
 
 npm install --save-dev gulp-plumber gulp-connect jshint-stylish gulp-csslint
+
+2. Use the following command in the project directory to run it on your local machine:
+```
+gulp
 ```

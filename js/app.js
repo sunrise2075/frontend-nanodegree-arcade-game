@@ -14,10 +14,11 @@ var Enemy = function(serialNo) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     //take each block as an coordinate
-    this.speed = getRandomInt(100, 200)  +  200 ;
-    this.blockX = -( 2* serialNo + 1);
+    this.speed = getRandomInt(1, 200)  +  200 ;
+    this.serialNo = serialNo;
+
     console.log();
-    this.blockY = getRandomInt(1,4);
+
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -35,10 +36,12 @@ Enemy.prototype.isOnCanvas = function(){
 };
 
 Enemy.prototype.calculateX = function(){
+    this.blockX = -( 2* this.serialNo + 1);
     this.x = this.blockX  * STONE_BLOCK_WIDTH;
 };
 
 Enemy.prototype.calculateY = function(){
+    this.blockY = getRandomInt(1,4);
     // an easier way to select a stone lane by its serialNo
     switch (this.blockY) {
         case 1:
@@ -53,7 +56,21 @@ Enemy.prototype.calculateY = function(){
         default:
             throw "invalid track number, please use 1, 2 or 3 to specify the track in the topdown order";
     }
+
 };
+
+Enemy.prototype.bitePlayer =function(){
+    var success = false;
+    if(this.x < 0){
+        return success;
+    }
+
+    if(this.blockY === player.blockY){
+        var distance = player.x + 25 -this.x;
+        success = (distance>0)&&(distance<= STONE_BLOCK_WIDTH);
+    }
+    return success;
+}
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -63,6 +80,10 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     if(this.isOnCanvas()){
         this.x = this.x + this.speed * dt;
+    }else{
+        this.calculateX();
+        this.calculateY();
+        this.speed = getRandomInt(1, 200)  +  200 ;
     }
     //Question 3: I need some logic to
     //control the time delay before drawing this enemy bug onto the stone track line
@@ -83,22 +104,25 @@ var Player = function(name) {
     this.name = name;
     //used as the default icon of player
     this.image = 'images/char-boy.png';
+    this.reset();
+    //control the relative position with reference of an
+    // Cartesian coordinate system which takes left down corner as its origin
+};
+
+Player.prototype.reset = function(){
     this.blockX = getRandomInt(0, 5);
     this.blockY = getRandomInt(4, 6)
     //control the absolute position
     this.x = this.blockX * STONE_BLOCK_WIDTH;
     //default position, the left-down corner of grass block
     this.y = this.blockY * STONE_BLOCK_HEIGHT/2 - 20;
-    //control the relative position with reference of an
-    // Cartesian coordinate system which takes left down corner as its origin
-};
+}
 
 Player.prototype.toPositionInBlock = function(){
     console.log("blockX:["+ this.blockX +"], blockY:["+ this.blockY +"]");
-}
+};
 
 Player.prototype.update = function() {
-    this.toPositionInBlock();
     this.render();
 };
 
@@ -120,7 +144,7 @@ Player.prototype.handleInput = function(action) {
             }
             break;
         case 'up':
-            if (this.blockY < 4) {
+            if (this.blockY > 1) {
                 //keep the player from the water block boundary
                 this.y = this.y - STONE_BLOCK_HEIGHT / 2;
                 this.blockY--;
@@ -137,7 +161,7 @@ Player.prototype.handleInput = function(action) {
             break;
         case 'down':
             //keep the player from the bottom boundary
-            if (this.blockY > 0) {
+            if (this.blockY < 5) {
                 this.y = this.y + STONE_BLOCK_HEIGHT / 2;
                 this.blockY++;
                 this.update();
@@ -153,7 +177,7 @@ Player.prototype.handleInput = function(action) {
 // Place the player object in a variable called player
 var allEnemies = [];
 
-for (var i = 0; i < 50; i++) {
+for (var i = 0; i < 5; i++) {
     var serailNo = i+1;
     var enemy = new Enemy(serailNo);
     allEnemies.push(enemy);
