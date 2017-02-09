@@ -1,19 +1,30 @@
 frontend-nanodegree-arcade-game
 ===============================
+Thsi is my work of Classic Arcade Game Clone for Udacity Front End Nanodegree Program.
+Everyone is welcomed to play it, and no copy right required!
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+# How to set up
 
-===============================
+## Use command tool in project directory
 
-1. Install development dependencies using npm tool in cmd terminal
+1. To Install dependencies with both nodejs and npm tool preinstalled
 ```
 npm install --save-dev gulp gulp-uglify jshint gulp-jshint gulp-rename 
 
 npm install --save-dev gulp-plumber gulp-connect jshint-stylish gulp-csslint
-
-2. Use the following command in the project directory to run it on your local machine
+```
+2. To run it on your local machine
 ```
 gulp
 ```
+
+# How to play
+
+## use the arrow keys
+
+By the arrow keys, you can move the player around on the stone blocks and grass blocks.
+
+Be Careful to avoid being knocked by any enemy bug, or the player will die and a new round og game will start automatically!
+ 
+Just enjoy the game!
