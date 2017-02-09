@@ -25,6 +25,6 @@ gulp
 
 By the arrow keys, you can move the player around on the stone blocks and grass blocks.
 
-Be Careful to avoid being knocked by any enemy bug, or the player will die and a new round og game will start automatically!
+Be Careful to avoid being knocked by any enemy bug, or the player will die and a new round of game will start automatically!
  
 Just enjoy the game!
