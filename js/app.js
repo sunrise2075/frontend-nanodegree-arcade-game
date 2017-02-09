@@ -108,10 +108,7 @@ Player.prototype.checkCollision = function(){
             var flag = false;
             if(enemy.blockY === player.blockY){
                 var distance = player.x + 25 -enemy.x;
-                flag = (distance>0)&&(distance<= STONE_BLOCK_WIDTH);
-                if(flag){
-                    flag = true;
-                }
+                flag = (distance > 0) &&(distance<= STONE_BLOCK_WIDTH);
             }
             return flag;
     });
