@@ -28,3 +28,10 @@ By the arrow keys, you can move the player around on the stone blocks and grass 
 Be Careful to avoid being knocked by any enemy bug, or the player will die and a new round of game will start automatically!
  
 Just enjoy the game!
+
+## Use Enter key on the keyboard to start a new round of game
+
+If the payer step onto the second line of stone block, which is also beside the first line of water block, you will win the game and see an "good Job" alert on the top of canvas.
+
+When you would like to start a new round of game, just press **Enter** key!
+

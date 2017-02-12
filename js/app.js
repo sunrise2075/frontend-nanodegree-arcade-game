@@ -2,19 +2,68 @@
 var STONE_BLOCK_WIDTH = 101;
 var STONE_BLOCK_HEIGHT = 171;
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+//an util object encapsulating a set of useful method
+var util = {
+    /*
+    * @description get a random number equal or greater than value of min,
+    * and less than value of max
+    * @param {number} min
+    * @param {number} max
+    * */
+    getRandomInt : function(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    },
+    /*
+     * @description freeze all enemy bugs on the canvas
+     * */
+    freezeAllEnemies : function(){
+        allEnemies.forEach(function(enemy){
+            enemy.freeze();
+        });
+    },
+    /*
+     * @description unfreeze all enemy bugs on the canvas
+     * */
+    unFreezeAllEnemies : function(){
+        allEnemies.forEach(function(enemy){
+            enemy.unfreeze();
+        });
+    }
+};
 
+/*
+ * @description represent a banner ot alert messages
+ * @constructor
+ * */
+var Banner = function(){
+    this.successImage = "images/success-key.png";
+    this.gameOverImage = "images/game-over.png";
+    this.x = 1.25 * STONE_BLOCK_WIDTH;
+    this.y = 0.3 * STONE_BLOCK_HEIGHT;
+}
+/*
+ * @description draw an alert messages of Good Job
+ * */
+Banner.prototype.drawSuccessImage = function(){
+    ctx.drawImage(Resources.get(this.successImage), this.x, this.y);
+};
+
+/*
+ * @description draw an alert messages when the player
+ *              is killed by any enemy bug
+ * */
+Banner.prototype.drawGameOverImage = function(){
+    ctx.drawImage(Resources.get(this.gameOverImage), this.x, this.y);
+};
 
 // Enemies our player must avoid
 var Enemy = function(serialNo) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     //take each block as an coordinate
-    this.speed = getRandomInt(1, 200)  +  200 ;
+    this.speed = util.getRandomInt(1, 200)  +  200 ;
     this.serialNo = serialNo;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
@@ -38,7 +87,7 @@ Enemy.prototype.calculateX = function(){
 };
 
 Enemy.prototype.calculateY = function(){
-    this.blockY = getRandomInt(1,4);
+    this.blockY = util.getRandomInt(1,4);
     // an easier way to select a stone lane by its serialNo
     switch (this.blockY) {
         case 1:
@@ -67,9 +116,18 @@ Enemy.prototype.update = function(dt) {
     }else{
         this.calculateX();
         this.calculateY();
-        this.speed = getRandomInt(1, 200)  +  200 ;
+        this.speed = util.getRandomInt(1, 200)  +  200 ;
     }
-    this.render();
+};
+
+//set the speed of current enemy bug to zero
+Enemy.prototype.freeze = function(){
+  this.speed = 0;
+};
+
+//reset the speed of current enemy bug to zero
+Enemy.prototype.unfreeze = function(){
+    this.speed = util.getRandomInt(1, 200)  +  200 ;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -85,6 +143,8 @@ var Player = function(name) {
     this.name = name;
     //used as the default icon of player
     this.image = 'images/char-boy.png';
+    this.success = false;
+    this.fail = false;
     this.initPos();
     //control the relative position with reference of an
     // Cartesian coordinate system which takes left down corner as its origin
@@ -97,10 +157,10 @@ Player.prototype.initPos = function(){
     this.x = this.blockX * STONE_BLOCK_WIDTH;
     //default position, the left-down corner of grass block
     this.y = this.blockY * STONE_BLOCK_HEIGHT/2 - 20;
-}
+};
 
 Player.prototype.checkCollision = function(){
-    var result = false;
+    var result ;
     var dangerousEnemy = allEnemies.filter(function(enemy) {
             var flag = false;
             if(enemy.blockY === player.blockY){
@@ -109,16 +169,8 @@ Player.prototype.checkCollision = function(){
             }
             return flag;
     });
-    result = (dangerousEnemy.length >0 )
+    result = (dangerousEnemy.length >0 );
     return result;
-};
-
-Player.prototype.checkSuccess = function(){
-    return (this.blockY === 1);
-};
-
-Player.prototype.toPositionInBlock = function(){
-    console.log("blockX:["+ this.blockX +"], blockY:["+ this.blockY +"]");
 };
 
 Player.prototype.update = function() {
@@ -126,11 +178,14 @@ Player.prototype.update = function() {
     if(checkCollision){
         this.initPos();
     }
-    this.render();
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.image), this.x, this.y);
+    if(this.success){
+        util.freezeAllEnemies();
+        banner.drawSuccessImage();
+    }
 };
 
 Player.prototype.handleInput = function(action) {
@@ -170,8 +225,17 @@ Player.prototype.handleInput = function(action) {
                 this.update();
             }
             break;
+        case 'enter':
+            this.success = false;
+            this.initPos();
+            util.unFreezeAllEnemies();
+            break;
         default:
             break;
+    }
+
+    if(this.blockY === 1){
+        this.success = true;
     }
 };
 
@@ -187,6 +251,7 @@ for (var i = 0; i < 5; i++) {
 }
 
 var player = new Player('sunrise2075');
+var banner = new Banner();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -195,7 +260,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: 'enter'
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
